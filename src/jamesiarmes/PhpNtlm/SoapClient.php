@@ -70,7 +70,7 @@ class SoapClient extends \SoapClient
         // If the response if false than there was an error and we should throw
         // an exception.
         if ($response === false) {
-            throw new EWS_Exception(
+            throw new \RuntimeException(
                 'Curl error: ' . curl_error($this->ch),
                 curl_errno($this->ch)
             );
