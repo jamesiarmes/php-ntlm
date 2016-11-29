@@ -122,7 +122,8 @@ class SoapClient extends \SoapClient
             CURLOPT_HTTPHEADER => $this->buildHeaders($action),
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC | CURLAUTH_NTLM,
-            CURLOPT_USERPWD => $this->user . ':' . $this->password
+            CURLOPT_USERPWD => $this->options['user'] . ':'
+                               . $this->options['password'],
         );
 
         // We shouldn't allow these options to be overridden.
