@@ -101,6 +101,7 @@ class SoapClient extends \SoapClient
             'User-Agent: PHP-SOAP-CURL',
             'Content-Type: text/xml; charset=utf-8',
             "SOAPAction: \"$action\"",
+            'Expect: 100-continue',
         );
     }
 
