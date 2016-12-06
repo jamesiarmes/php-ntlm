@@ -88,6 +88,25 @@ class SoapClient extends \SoapClient
     }
 
     /**
+     * Returns the response code from the last request
+     *
+     * @return integer
+     *
+     * @throws \BadMethodCallException
+     *   If no cURL resource has been initialized.
+     */
+    public function getResponseCode()
+    {
+        if (empty($this->ch)) {
+            throw new \BadMethodCallException('No cURL resource has been '
+                . 'initialized. This is probably because no request has not '
+                . 'been made.');
+        }
+
+        return curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+    }
+
+    /**
      * Builds the headers for the request.
      *
      * @param string $action
