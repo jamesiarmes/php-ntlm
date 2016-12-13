@@ -55,6 +55,7 @@ class SoapClient extends \SoapClient
     public function __doRequest($request, $location, $action, $version, $one_way = 0)
     {
         $headers = $this->buildHeaders($action);
+        $this->__last_request = $request;
         $this->__last_request_headers = $headers;
 
         // Only reinitialize curl handle if the location is different.
@@ -70,13 +71,19 @@ class SoapClient extends \SoapClient
         // If the response if false than there was an error and we should throw
         // an exception.
         if ($response === false) {
+            $this->__last_response = $this->__last_response_headers = false;
             throw new \RuntimeException(
                 'Curl error: ' . curl_error($this->ch),
                 curl_errno($this->ch)
             );
         }
 
-        return $response;
+        // Parse the response and set the last response and headers.
+        $info = curl_getinfo($this->ch);
+        $this->__last_response_headers = substr($response, 0, $info['header_size']);
+        $this->__last_response = substr($response, $info['header_size']);
+
+        return $this->__last_response;
     }
 
     /**
@@ -84,7 +91,7 @@ class SoapClient extends \SoapClient
      */
     public function __getLastRequestHeaders()
     {
-        return implode('n', $this->__last_request_headers) . "\n";
+        return implode("\n", $this->__last_request_headers) . "\n";
     }
 
     /**
@@ -147,6 +154,7 @@ class SoapClient extends \SoapClient
         );
 
         // We shouldn't allow these options to be overridden.
+        $options[CURLOPT_HEADER] = true;
         $options[CURLOPT_POST] = true;
         $options[CURLOPT_POSTFIELDS] = $request;
 
