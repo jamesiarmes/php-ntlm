@@ -5,8 +5,8 @@ The PHP NTLM library (php-ntlm) is intended to provide various methods to aid in
 communicating with Microsoft services that utilize NTLM authentication from
 within PHP.
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jamesiarmes/php-ntlm/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jamesiarmes/php-ntlm/?branch=master)
-[![Total Downloads](https://poser.pugx.org/jamesiarmes/php-ntlm/downloads)](https://packagist.org/packages/jamesiarmes/php-ntlm)
+[![Scrutinizer](https://img.shields.io/scrutinizer/g/jamesiarmes/php-ntlm.svg?style=flat-square)](https://scrutinizer-ci.com/g/jamesiarmes/php-ntlm)
+[![Total Downloads](https://img.shields.io/packagist/dt/jamesiarmes/php-ntlm.svg?style=flat-square)](https://packagist.org/packages/jamesiarmes/php-ntlm)
 
 Dependencies
 ------------
