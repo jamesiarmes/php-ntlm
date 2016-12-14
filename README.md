@@ -6,6 +6,7 @@ communicating with Microsoft services that utilize NTLM authentication from
 within PHP.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/jamesiarmes/php-ntlm/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/jamesiarmes/php-ntlm/?branch=master)
+[![Total Downloads](https://poser.pugx.org/jamesiarmes/php-ntlm/downloads)](https://packagist.org/packages/jamesiarmes/php-ntlm)
 
 Dependencies
 ------------
