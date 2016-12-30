@@ -28,6 +28,20 @@ class SoapClient extends \SoapClient
 
     /**
      * {@inheritdoc}
+     *
+     * Additional options:
+     * - user (string): The user to authenticate with.
+     * - password (string): The password to use when authenticating the user.
+     * - curlopts (array): Array of options to set on the curl handler when
+     *   making the request.
+     * - strip_bad_chars (boolean, default true): Whether or not to strip
+     *   invalid characters from the XML response. This can lead to content
+     *   being returned differently than it actually is on the host service, but
+     *   can also prevent the "looks like we got no XML document" SoapFault when
+     *   the response includes invalid characters.
+     * - warn_on_bad_chars (boolean, default false): Trigger a warning if bad
+     *   characters are stripped. This has no affect unless strip_bad_chars is
+     *   true.
      */
     public function __construct($wsdl, array $options = null)
     {
@@ -36,6 +50,8 @@ class SoapClient extends \SoapClient
             'user' => null,
             'password' => null,
             'curlopts' => array(),
+            'strip_bad_chars' => true,
+            'warn_on_bad_chars' => false,
         );
         $this->options = $options;
 
@@ -78,10 +94,8 @@ class SoapClient extends \SoapClient
             );
         }
 
-        // Parse the response and set the last response and headers.
-        $info = curl_getinfo($this->ch);
-        $this->__last_response_headers = substr($response, 0, $info['header_size']);
-        $this->__last_response = substr($response, $info['header_size']);
+        $this->parseResponse($response);
+        $this->cleanResponse();
 
         return $this->__last_response;
     }
@@ -132,6 +146,37 @@ class SoapClient extends \SoapClient
     }
 
     /**
+     * Cleans the response body by stripping bad characters if instructed to.
+     */
+    protected function cleanResponse()
+    {
+        // If the option to strip bad characters is not set, then we shouldn't
+        // do anything here.
+        if (!$this->options['strip_bad_chars']) {
+            return;
+        }
+
+        // Strip invalid characters from the XML response body.
+        $count = 0;
+        $this->__last_response = preg_replace(
+            '/(?!&#x0?(9|A|D))(&#x[0-1]?[0-9A-F];)/',
+            ' ',
+            $this->__last_response,
+            -1,
+            $count
+        );
+
+        // If the option to warn on bad characters is set, and some characters
+        // were stripped, then trigger a warning.
+        if ($this->options['warn_on_bad_chars'] && $count > 0) {
+            trigger_error(
+                'Invalid characters were stripped from the XML SOAP response.',
+                E_USER_WARNING
+            );
+        }
+    }
+
+    /**
      * Builds an array of curl options for the request
      *
      * @param string $action
@@ -159,5 +204,23 @@ class SoapClient extends \SoapClient
         $options[CURLOPT_POSTFIELDS] = $request;
 
         return $options;
+    }
+
+    /**
+     * Pareses the response from a successful request.
+     *
+     * @param string $response
+     *   The response from the cURL request, including headers and body.
+     */
+    public function parseResponse($response)
+    {
+        // Parse the response and set the last response and headers.
+        $info = curl_getinfo($this->ch);
+        $this->__last_response_headers = substr(
+            $response,
+            0,
+            $info['header_size']
+        );
+        $this->__last_response = substr($response, $info['header_size']);
     }
 }
