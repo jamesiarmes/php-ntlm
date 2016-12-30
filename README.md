@@ -80,3 +80,10 @@ differently than it actually is on the host service, but can also prevent the
 characters.
 - warn_on_bad_chars (boolean, default: false): Trigger a warning if bad
 characters are stripped. This has no affect unless strip_bad_chars is true.
+
+## Projects that use php-ntlm
+The following is a list of known projects that use this library. If you would
+like to add your project to the list, please open a pull request to update this
+document.
+
+- [php-ews](https://github.com/jamesiarmes/php-ews)
