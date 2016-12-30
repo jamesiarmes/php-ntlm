@@ -61,3 +61,22 @@ $client = new SoapClient(
     )
 };
 ```
+
+#### Available options
+The basic options available on the constructor can be found at
+http://us1.php.net/manual/en/soapclient.soapclient.php. The trace option is not
+necessary, as the last request and response methods will always be available. In
+addition to these options, the following additional options are available:
+
+- user (string, required): The user to authenticate with.
+- password (string, required): The password to use when authenticating the user.
+- curlopts (array): Array of options to set on the curl handler when making the
+request. This can be used to override any cURL options with the exception of the
+following: CURLOPT_HEADER, CURLOPT_POST, CURLOPT_POSTFIELDS.
+- strip_bad_chars (boolean, default: true): Whether or not to strip invalid
+characters from the XML response. This can lead to content being returned
+differently than it actually is on the host service, but can also prevent the
+"looks like we got no XML document" SoapFault when the response includes invalid
+characters.
+- warn_on_bad_chars (boolean, default: false): Trigger a warning if bad
+characters are stripped. This has no affect unless strip_bad_chars is true.
