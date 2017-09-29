@@ -64,7 +64,7 @@ $client = new SoapClient(
 
 #### Available options
 The basic options available on the constructor can be found at
-http://us1.php.net/manual/en/soapclient.soapclient.php. The trace option is not
+http://php.net/manual/en/soapclient.soapclient.php. The trace option is not
 necessary, as the last request and response methods will always be available. In
 addition to these options, the following additional options are available:
 
