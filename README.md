@@ -24,7 +24,7 @@ handle autoloading of classes.
 ```json
 {
     "require": {
-        "jamesiarmes/php-ntlm": "dev-master"
+        "jamesiarmes/php-ntlm": "~1.0"
     }
 }
 ```

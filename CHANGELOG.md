@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+## 1.0.0 - 2017-10-03
+
+First stable release.
+
+### Changed
+- Fixed broken URL in README.
+
 ## 1.0.0-beta.1 - 2016-12-30
 
 ### Added
