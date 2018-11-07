@@ -43,7 +43,7 @@ class SoapClient extends \SoapClient
      *   characters are stripped. This has no affect unless strip_bad_chars is
      *   true.
      */
-    public function __construct($wsdl, array $options = null)
+    public function __construct($wsdl, array $options = [])
     {
         // Set missing indexes to their default value.
         $options += array(
