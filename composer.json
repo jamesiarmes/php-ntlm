@@ -11,7 +11,8 @@
   "prefer-stable": true,
   "require": {
     "php": ">=5.3.9",
-    "ext-soap": "*"
+    "ext-soap": "*",
+    "ext-curl": "*"
   },
   "config": {
     "bin-dir": "bin"
