@@ -59,7 +59,7 @@ $client = new SoapClient(
         'password' => '12345',
         'curlopts' => array(CURLOPT_SSL_VERIFYPEER => false),
     )
-};
+);
 ```
 
 #### Available options
