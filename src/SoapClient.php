@@ -87,7 +87,13 @@ class SoapClient extends \SoapClient
                 $temp_file = sys_get_temp_dir() . '/' . $wsdlHash . '.ntlm.wsdl';
                 if (!file_exists($temp_file) || (isset($this->options['cache_wsdl']) && $this->options['cache_wsdl'] === WSDL_CACHE_NONE)) {
                     $wsdl_contents = $this->__doRequest(NULL , $wsdl, NULL, SOAP_1_1);
-                    file_put_contents($temp_file, $wsdl_contents);
+                    // Ensure the WSDL is only stored after validating it roughly.
+                    if (!curl_errno($this->ch) && strpos($wsdl_contents, '<definitions ') !== FALSE) {
+                        file_put_contents($temp_file, $wsdl_contents);
+                    }
+                    else {
+                        throw new \SoapFault('Fetching WSDL', sprintf('Unable to fetch a valid WSDL definition from: %s', $wsdl));
+                    }
                 }
                 self::$wsdlCache[$wsdlHash] = $temp_file;
             }
