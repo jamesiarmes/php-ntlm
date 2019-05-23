@@ -27,6 +27,12 @@ class SoapClient extends \SoapClient
     protected $options;
 
     /**
+     * Cache for fetched WSDLs.
+     * @var array
+     */
+    protected static $wsdlCache = [];
+
+    /**
      * {@inheritdoc}
      *
      * Additional options:
@@ -55,6 +61,8 @@ class SoapClient extends \SoapClient
         );
         $this->options = $options;
 
+        $wsdl = $this->___fetchWSDL($wsdl);
+
         // Verify that a user name and password were entered.
         if (empty($options['user']) || empty($options['password'])) {
             throw new \BadMethodCallException(
@@ -63,6 +71,35 @@ class SoapClient extends \SoapClient
         }
 
         parent::__construct($wsdl, $options);
+    }
+
+    /**
+     * Fetch the WSDL to use.
+     *
+     * We need to fetch the WSDL on our own and save it into a file so that the parent class can load it from there.
+     * This is because the parent class doesn't support overwriting the WSDL fetching code which means we can't add
+     * the required NTLM handling.
+     */
+    protected function ___fetchWSDL($wsdl) {
+        if (!empty($wsdl) && !file_exists($wsdl)) {
+            $wsdlHash = md5($wsdl);
+            if (empty(self::$wsdlCache[$wsdlHash])) {
+                $temp_file = sys_get_temp_dir() . '/' . $wsdlHash . '.ntlm.wsdl';
+                if (!file_exists($temp_file) || (isset($this->options['cache_wsdl']) && $this->options['cache_wsdl'] === WSDL_CACHE_NONE)) {
+                    $wsdl_contents = $this->__doRequest(NULL , $wsdl, NULL, SOAP_1_1);
+                    // Ensure the WSDL is only stored after validating it roughly.
+                    if (!curl_errno($this->ch) && strpos($wsdl_contents, '<definitions ') !== FALSE) {
+                        file_put_contents($temp_file, $wsdl_contents);
+                    }
+                    else {
+                        throw new \SoapFault('Fetching WSDL', sprintf('Unable to fetch a valid WSDL definition from: %s', $wsdl));
+                    }
+                }
+                self::$wsdlCache[$wsdlHash] = $temp_file;
+            }
+            $wsdl = self::$wsdlCache[$wsdlHash];
+        }
+        return $wsdl;
     }
 
     /**
@@ -135,6 +172,14 @@ class SoapClient extends \SoapClient
      */
     protected function buildHeaders($action)
     {
+        if (is_null($action)) {
+            return array(
+                'Method: GET',
+                'Connection: Keep-Alive',
+                'User-Agent: PHP-SOAP-CURL',
+                'Content-Type: text/xml; charset=utf-8',
+            );
+        }
         return array(
             'Method: POST',
             'Connection: Keep-Alive',
