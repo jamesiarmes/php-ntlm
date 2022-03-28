@@ -10,7 +10,7 @@
   ],
   "prefer-stable": true,
   "require": {
-    "php": ">=5.3.9",
+    "php": ">=8.1",
     "ext-soap": "*",
     "ext-curl": "*"
   },
