@@ -68,7 +68,7 @@ class SoapClient extends \SoapClient
     /**
      * {@inheritdoc}
      */
-    public function __doRequest($request, $location, $action, $version, $one_way = 0)
+    public function __doRequest(string $request, string $location, string $action, int $version, bool $one_way = false): ?string
     {
         $headers = $this->buildHeaders($action);
         $this->__last_request = $request;
@@ -103,7 +103,7 @@ class SoapClient extends \SoapClient
     /**
      * {@inheritdoc}
      */
-    public function __getLastRequestHeaders()
+    public function __getLastRequestHeaders(): ?string
     {
         return implode("\n", $this->__last_request_headers) . "\n";
     }
