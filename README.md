@@ -12,7 +12,7 @@ Dependencies
 ------------
 
  * Composer
- * PHP 5.4 or greater
+ * PHP 8.1
  * cURL with NTLM support (7.23.0+ recommended)
 
 Installation
