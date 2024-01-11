@@ -13,6 +13,7 @@ use CurlHandle;
  *
  * @package php-ntlm\Soap
  */
+#[\AllowDynamicProperties]
 class SoapClient extends \SoapClient
 {
     /**
